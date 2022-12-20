@@ -65,6 +65,22 @@ def init_worker(shared_password_found, shared_passwords_guessed, shared_lock, sh
     correct_password = shared_correct_password
 
 
+def tqdm_thread_progress_bar():
+    global shared_password_found
+    global shared_passwords_guessed
+    global max_password_length
+
+    total_possible_passwords = 0
+    for i in range(1, max_password_length + 1):
+        total_possible_passwords += 62 ** i
+
+    with tqdm.tqdm(total=total_possible_passwords, unit='passwords', position=0, colour='red', ascii=True) as pbar:
+        while True:
+            if shared_password_found.value == 1:
+                break
+
+            pbar.update(shared_passwords_guessed.value - pbar.n)
+            time.sleep(1)
 
 
 if __name__ == '__main__':
